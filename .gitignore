@@ -1,0 +1,10 @@
+TestProject~/Library/
+TestProject~/Temp/
+TestProject~/Logs/
+TestProject~/Obj/
+TestProject~/UserSettings/
+TestProject~/Packages/packages-lock.json
+TestProject~/ProjectSettings/*
+!TestProject~/ProjectSettings/ProjectVersion.txt
+*.csproj
+*.sln

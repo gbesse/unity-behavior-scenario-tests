@@ -1,0 +1,6 @@
+{
+  "name": "BehaviorScenarioTests.Tests",
+  "references": ["BehaviorScenarioTests.Runtime", "Unity.Behavior"],
+  "optionalUnityReferences": ["TestAssemblies"],
+  "includePlatforms": ["Editor"]
+}

@@ -1,0 +1,6 @@
+{
+  "name": "BehaviorScenarioTests.Runtime",
+  "rootNamespace": "BehaviorScenarioTests",
+  "references": ["Unity.Behavior", "Unity.Behavior.SerializableGUID"],
+  "autoReferenced": true
+}
