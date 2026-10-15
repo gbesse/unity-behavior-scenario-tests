@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using Unity.Behavior;
 
 namespace BehaviorScenarioTests
@@ -56,21 +57,34 @@ namespace BehaviorScenarioTests
                 throw new InvalidOperationException($"Blackboard variable '{name}': expected '{expected}', got '{actual}'.");
         }
 
-        public IEnumerator WaitFrames(int count)
+        private static void CheckCancellation(CancellationToken cancellationToken)
         {
-            if (count < 0) throw new ArgumentOutOfRangeException(nameof(count));
-            for (var index = 0; index < count; index++) yield return null;
+            if (cancellationToken.IsCancellationRequested)
+                throw new OperationCanceledException("FR : scénario annulé. EN: scenario cancelled. ES: escenario cancelado.", cancellationToken);
         }
 
-        public IEnumerator Until<T>(string name, T expected, int maxFrames)
+        public IEnumerator WaitFrames(int count, CancellationToken cancellationToken = default)
+        {
+            if (count < 0) throw new ArgumentOutOfRangeException(nameof(count));
+            for (var index = 0; index < count; index++)
+            {
+                CheckCancellation(cancellationToken);
+                yield return null;
+            }
+            CheckCancellation(cancellationToken);
+        }
+
+        public IEnumerator Until<T>(string name, T expected, int maxFrames, CancellationToken cancellationToken = default)
         {
             if (maxFrames < 0) throw new ArgumentOutOfRangeException(nameof(maxFrames));
-            for (var index = 0; index <= maxFrames; index++)
+            for (var index = 0; index < maxFrames; index++)
             {
+                CheckCancellation(cancellationToken);
                 if (blackboard.Get(name, out T actual) && EqualityComparer<T>.Default.Equals(actual, expected))
                     yield break;
-                if (index < maxFrames) yield return null;
+                yield return null;
             }
+            CheckCancellation(cancellationToken);
             Expect(name, expected);
         }
     }

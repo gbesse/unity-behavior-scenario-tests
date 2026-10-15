@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using NUnit.Framework;
 
 namespace BehaviorScenarioTests.Tests
@@ -60,6 +61,34 @@ namespace BehaviorScenarioTests.Tests
             var steps = runner.Until("Mode", "Chase", 1);
             Assert.IsTrue(steps.MoveNext());
             Assert.Throws<InvalidOperationException>(() => steps.MoveNext());
+        }
+        [Test]
+        public void CancellationStopsWaitAndUntil()
+        {
+            var runner = new ScenarioRunner(new Blackboard());
+            using (var cancellation = new CancellationTokenSource())
+            {
+                var wait = runner.WaitFrames(10, cancellation.Token);
+                var until = runner.Until("Mode", "Chase", 10, cancellation.Token);
+                Assert.IsTrue(wait.MoveNext());
+                Assert.IsTrue(until.MoveNext());
+                cancellation.Cancel();
+                Assert.Throws<OperationCanceledException>(() => wait.MoveNext());
+                Assert.Throws<OperationCanceledException>(() => until.MoveNext());
+            }
+        }
+
+        [Test]
+        public void ZeroFrameDeadlineAndCancellationAreExplicit()
+        {
+            var runner = new ScenarioRunner(new Blackboard());
+            runner.Set("Mode", "Chase");
+            Assert.IsFalse(runner.Until("Mode", "Chase", 0).MoveNext());
+            using (var cancellation = new CancellationTokenSource())
+            {
+                cancellation.Cancel();
+                Assert.Throws<OperationCanceledException>(() => runner.Until("Mode", "Chase", 0, cancellation.Token).MoveNext());
+            }
         }
     }
 }

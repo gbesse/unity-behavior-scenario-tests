@@ -1,6 +1,6 @@
 {
   "name": "io.gbesse.behavior-scenario-tests",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "displayName": "Behavior Scenario Tests",
   "description": "Readable Play Mode scenarios for Unity Behavior graphs and blackboards.",
   "unity": "6000.0",
