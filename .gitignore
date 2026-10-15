@@ -8,3 +8,14 @@ TestProject~/ProjectSettings/*
 !TestProject~/ProjectSettings/ProjectVersion.txt
 *.csproj
 *.sln
+
+.local/
+Validation~/bin/
+Validation~/obj/
+!Validation~/BehaviorScenarioValidation.csproj
+
+!Validation~/
+!Validation~/**
+Validation~/bin/
+Validation~/obj/
+!Validation~/BehaviorScenarioValidation.csproj
