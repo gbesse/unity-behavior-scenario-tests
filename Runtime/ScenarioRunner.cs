@@ -46,15 +46,15 @@ namespace BehaviorScenarioTests
         public void Set<T>(string name, T value)
         {
             if (!blackboard.Set(name, value))
-                throw new InvalidOperationException($"Blackboard variable '{name}' was not found or has another type.");
+                throw new InvalidOperationException($"FR : variable Blackboard '{name}' absente ou de type différent. EN: Blackboard variable '{name}' was not found or has another type. ES: variable Blackboard '{name}' ausente o de otro tipo.");
         }
 
         public void Expect<T>(string name, T expected)
         {
             if (!blackboard.Get(name, out T actual))
-                throw new InvalidOperationException($"Blackboard variable '{name}' was not found or has another type.");
+                throw new InvalidOperationException($"FR : variable Blackboard '{name}' absente ou de type différent. EN: Blackboard variable '{name}' was not found or has another type. ES: variable Blackboard '{name}' ausente o de otro tipo.");
             if (!EqualityComparer<T>.Default.Equals(actual, expected))
-                throw new InvalidOperationException($"Blackboard variable '{name}': expected '{expected}', got '{actual}'.");
+                throw new InvalidOperationException($"FR : variable Blackboard '{name}' : attendu '{expected}', obtenu '{actual}'. EN: Blackboard variable '{name}': expected '{expected}', got '{actual}'. ES: variable Blackboard '{name}': esperado '{expected}', obtenido '{actual}'.");
         }
 
         private static void CheckCancellation(CancellationToken cancellationToken)
