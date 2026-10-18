@@ -90,5 +90,18 @@ namespace BehaviorScenarioTests.Tests
                 Assert.Throws<OperationCanceledException>(() => runner.Until("Mode", "Chase", 0, cancellation.Token).MoveNext());
             }
         }
+
+        [Test]
+        public void HoldsForChecksEveryResumeIncludingFinalBoundary()
+        {
+            var board = new Blackboard();
+            var runner = new ScenarioRunner(board);
+            board.Set("Mode", "Guard");
+            var invariant = runner.HoldsFor("Mode", "Guard", 1);
+            Assert.IsTrue(invariant.MoveNext());
+            board.Set("Mode", "Attack");
+            Assert.Throws<InvalidOperationException>(() => invariant.MoveNext());
+            Assert.IsFalse(runner.HoldsFor("Mode", "Attack", 0).MoveNext());
+        }
     }
 }
