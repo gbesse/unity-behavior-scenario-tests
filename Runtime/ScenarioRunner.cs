@@ -74,6 +74,19 @@ namespace BehaviorScenarioTests
             CheckCancellation(cancellationToken);
         }
 
+        public IEnumerator HoldsFor<T>(string name, T expected, int count, CancellationToken cancellationToken = default)
+        {
+            if (count < 0) throw new ArgumentOutOfRangeException(nameof(count), "FR : nombre de frames négatif. EN: negative frame count. ES: cantidad de frames negativa.");
+            for (var index = 0; index < count; index++)
+            {
+                CheckCancellation(cancellationToken);
+                Expect(name, expected);
+                yield return null;
+            }
+            CheckCancellation(cancellationToken);
+            Expect(name, expected);
+        }
+
         public IEnumerator Until<T>(string name, T expected, int maxFrames, CancellationToken cancellationToken = default)
         {
             if (maxFrames < 0) throw new ArgumentOutOfRangeException(nameof(maxFrames));

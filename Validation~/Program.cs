@@ -19,6 +19,13 @@ class Program {
   Reject<OperationCanceledException>(()=>wait.MoveNext());Reject<OperationCanceledException>(()=>runner.Until("Mode","Chase",0,cancel.Token).MoveNext());
   var frames=runner.WaitFrames(2);Assert(frames.MoveNext());Assert(frames.MoveNext());Assert(!frames.MoveNext());
   Reject<ArgumentOutOfRangeException>(()=>runner.WaitFrames(-1).MoveNext());
+  board.Set("Mode","Guard");var stable=runner.HoldsFor("Mode","Guard",2);Assert(stable.MoveNext());Assert(stable.MoveNext());Assert(!stable.MoveNext());
+  Assert(!runner.HoldsFor("Mode","Guard",0).MoveNext());
+  var invariant=runner.HoldsFor("Mode","Guard",2);Assert(invariant.MoveNext());board.Set("Mode","Attack");Reject<InvalidOperationException>(()=>invariant.MoveNext());
+  var final=runner.HoldsFor("Mode","Attack",1);Assert(final.MoveNext());board.Set("Mode","Guard");Reject<InvalidOperationException>(()=>final.MoveNext());
+  Reject<InvalidOperationException>(()=>runner.HoldsFor("missing",true,0).MoveNext());
+  Reject<ArgumentOutOfRangeException>(()=>runner.HoldsFor("Mode","Guard",-1).MoveNext());
+  Reject<OperationCanceledException>(()=>runner.HoldsFor("Mode","Guard",0,cancel.Token).MoveNext());
   Console.WriteLine("FR : logique C# vérifiée sans hôte Unity. EN: C# logic verified without Unity host. ES: lógica C# verificada sin host Unity.");
  }
 }
